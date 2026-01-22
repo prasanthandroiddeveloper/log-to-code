@@ -7,6 +7,7 @@ pipeline {
         CHANGED_FILES = ""
     }
 
+
     stages {
 
         stage('Checkout') {
