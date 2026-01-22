@@ -20,14 +20,9 @@ pipeline {
             steps {
                 script {
                     // Jenkins safe way (works even with detached HEAD)
-                    env.COMMIT_SHA = powershell(returnStdout: true, script: 'git rev-parse HEAD').trim()
-                    env.BRANCH     = powershell(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
-
-                    // Last commit files
-                    env.CHANGED_FILES = powershell(
-                        returnStdout: true,
-                        script: 'git show --name-only --pretty="" HEAD'
-                    ).trim()
+                    env.COMMIT_SHA = bat(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                                   env.BRANCH = bat(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
+                                   env.CHANGED_FILES = bat(returnStdout: true, script: 'git show --name-only --pretty="" HEAD').trim()
 
                     echo "Commit  : ${env.COMMIT_SHA}"
                     echo "Branch  : ${env.BRANCH}"
