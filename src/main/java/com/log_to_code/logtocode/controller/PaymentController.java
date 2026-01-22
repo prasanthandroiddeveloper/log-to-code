@@ -13,24 +13,21 @@ public class PaymentController {
 
     private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
-    // Simulate payment for a specific order
+    // ← Add this line here
+    private static final String COMMIT_SHA = System.getenv("COMMIT_SHA") != null ? System.getenv("COMMIT_SHA") : "unknown";
+
     @GetMapping("/pay/{orderId}")
     public String makePayment(@PathVariable String orderId) {
         try {
-            // Simulate an error for demonstration
             if (orderId.startsWith("x")) {
-                throw new RuntimeException("Payment service failed for order: " + orderId);
+                throw new RuntimeException("Payment service failed");
             }
-
-            // Normal processing
-            logger.info("Payment processed successfully for order: {}", orderId);
-
+            logger.info("Payment successful | {\"level\":\"INFO\",\"commit_sha\":\"{}\",\"order_id\":\"{}\",\"message\":\"Payment successful\"}",
+                    COMMIT_SHA, orderId);
         } catch (Exception e) {
-            // Log the exception
-            logger.error("Exception occurred: {}", e.getMessage());
-            // The build or app does not fail because we handle the exception
+            logger.error("Payment failed | {\"level\":\"ERROR\",\"commit_sha\":\"{}\",\"order_id\":\"{}\",\"message\":\"{}\"}",
+                    COMMIT_SHA, orderId, e.getMessage());
         }
-
-        return "Payment attempt completed for order: " + orderId;
+        return "Payment attempted for order: " + orderId;
     }
 }
