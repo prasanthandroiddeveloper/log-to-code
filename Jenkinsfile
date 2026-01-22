@@ -17,6 +17,7 @@ pipeline {
             }
         }
 
+
         stage('Git Info') {
             steps {
                 script {
