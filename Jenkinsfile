@@ -30,8 +30,8 @@ pipeline {
                     env.BRANCH     = bat(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
                     env.CHANGED_FILES = bat(returnStdout: true, script: 'git show --name-only --pretty="" HEAD').trim()
 
-                    echo "Commit SHA : ${env.COMMIT_SHA}"
-                    echo "Branch     : ${env.BRANCH}"
+                    echo "Commit SHA : ${env.GIT_COMMIT}"
+                    echo "Branch     : ${env.GIT_BRANCH}"
                     echo "Changed files:\n${env.CHANGED_FILES}"
 
                     // Write commit metadata to a new file
@@ -63,7 +63,7 @@ pipeline {
                     echo "Running Spring Boot on port ${port}"
 
                     bat """
-                    set COMMIT_SHA=${env.COMMIT_SHA}
+                    set COMMIT_SHA=${env.GIT_COMMIT}
                     java -jar target\\logtocode-0.0.1-SNAPSHOT.jar --server.port=${port}
                     """
                 }
