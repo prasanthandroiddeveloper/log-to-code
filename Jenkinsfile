@@ -19,6 +19,8 @@ pipeline {
         stage('Git Info') {
             steps {
                 script {
+                echo "Commit SHA: ${env.GIT_COMMIT}"
+                echo "Branch: ${env.GIT_BRANCH}"
                     // Jenkins safe way (works even with detached HEAD)
                     env.COMMIT_SHA = bat(returnStdout: true, script: 'git rev-parse HEAD').trim()
                                    env.BRANCH = bat(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
