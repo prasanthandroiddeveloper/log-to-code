@@ -19,16 +19,30 @@ pipeline {
         stage('Git Info') {
             steps {
                 script {
-                echo "Commit SHA: ${env.GIT_COMMIT}"
-                echo "Branch: ${env.GIT_BRANCH}"
-                    // Jenkins safe way (works even with detached HEAD)
-                    env.COMMIT_SHA = bat(returnStdout: true, script: 'git rev-parse HEAD').trim()
-                                   env.BRANCH = bat(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
-                                   env.CHANGED_FILES = bat(returnStdout: true, script: 'git show --name-only --pretty="" HEAD').trim()
+                    // Use Jenkins built-in variables when available
+                    echo "Jenkins GIT_COMMIT: ${env.GIT_COMMIT}"
+                    echo "Jenkins GIT_BRANCH: ${env.GIT_BRANCH}"
 
-                    echo "Commit  : ${env.COMMIT_SHA}"
-                    echo "Branch  : ${env.BRANCH}"
-                    echo "Changed : ${env.CHANGED_FILES}"
+                    // Safe way to get Git info
+                    env.COMMIT_SHA = bat(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                    env.BRANCH     = bat(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
+                    env.CHANGED_FILES = bat(returnStdout: true, script: 'git show --name-only --pretty="" HEAD').trim()
+
+                    echo "Commit SHA : ${env.COMMIT_SHA}"
+                    echo "Branch     : ${env.BRANCH}"
+                    echo "Changed files:\n${env.CHANGED_FILES}"
+
+                    // Write commit metadata to a new file
+                    def metadataFile = "commit_metadata.json"
+                    def files = env.CHANGED_FILES ?: ""
+                    writeFile file: metadataFile, text: """
+{
+  "commit_sha": "${env.COMMIT_SHA}",
+  "branch": "${env.BRANCH}",
+  "files_changed": "${files.replaceAll("\\n","\\\\n")}"
+}
+"""
+                    echo "Created file: ${metadataFile}"
                 }
             }
         }
@@ -41,12 +55,16 @@ pipeline {
 
         stage('Run') {
             steps {
+                script {
+                    // You can optionally choose a random free port if you like
+                    def port = 9000 + new Random().nextInt(1000)
+                    echo "Running Spring Boot on port ${port}"
 
-            bat """
-
-                set COMMIT_SHA=${env.COMMIT_SHA}
-                java -jar target\\logtocode-0.0.1-SNAPSHOT.jar --server.port=9000
-            """
+                    bat """
+                    set COMMIT_SHA=${env.COMMIT_SHA}
+                    java -jar target\\logtocode-0.0.1-SNAPSHOT.jar --server.port=${port}
+                    """
+                }
             }
         }
     }
@@ -54,16 +72,7 @@ pipeline {
     post {
         always {
             script {
-                def files = env.CHANGED_FILES ?: ""
-
-                writeFile file: 'commit_metadata.json', text: """
-{
-  "commit_sha": "${env.COMMIT_SHA}",
-  "branch": "${env.BRANCH}",
-  "files_changed": "${files.replaceAll("\\n","\\\\n")}"
-}
-"""
-                echo "commit_metadata.json generated"
+                echo "Pipeline finished. commit_metadata.json is saved."
             }
         }
     }
