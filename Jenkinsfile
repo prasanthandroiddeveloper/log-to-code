@@ -26,8 +26,8 @@ pipeline {
                     echo "Jenkins GIT_BRANCH: ${env.GIT_BRANCH}"
 
                     // Safe way to get Git info
-                    env.COMMIT_SHA = bat(returnStdout: true, script: 'git rev-parse HEAD').trim()
-                    env.BRANCH     = bat(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
+                    env.COMMIT_SHA = ${env.GIT_COMMIT}
+                    env.BRANCH     = ${env.GIT_BRANCH}
                     env.CHANGED_FILES = bat(returnStdout: true, script: 'git show --name-only --pretty="" HEAD').trim()
 
                     echo "Commit SHA : ${env.GIT_COMMIT}"
