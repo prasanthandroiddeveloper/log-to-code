@@ -39,8 +39,8 @@ pipeline {
                     def files = env.CHANGED_FILES ?: ""
                     writeFile file: metadataFile, text: """
 {
-  "commit_sha": "${env.COMMIT_SHA}",
-  "branch": "${env.BRANCH}",
+  "commit_sha": "${env.GIT_COMMIT}",
+  "branch": "${env.GIT_BRANCH}",
   "files_changed": "${files.replaceAll("\\n","\\\\n")}"
 }
 """
