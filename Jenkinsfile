@@ -26,6 +26,7 @@ pipeline {
                     echo "Jenkins GIT_BRANCH: ${env.GIT_BRANCH}"
 
 
+
                     // Safe way to get Git info
                     env.COMMIT_SHA = ${env.GIT_COMMIT}
                     env.BRANCH     = ${env.GIT_BRANCH}
