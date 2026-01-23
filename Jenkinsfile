@@ -28,8 +28,8 @@ pipeline {
 
 
                     // Safe way to get Git info
-                    env.COMMIT_SHA = ${env.GIT_COMMIT}
-                    env.BRANCH     = ${env.GIT_BRANCH}
+                    env.COMMIT_SHA = env.GIT_COMMIT
+                    env.BRANCH     = env.GIT_BRANCH
                     env.CHANGED_FILES = bat(returnStdout: true, script: 'git show --name-only --pretty="" HEAD').trim()
 
                     echo "Commit SHA : ${env.GIT_COMMIT}"
