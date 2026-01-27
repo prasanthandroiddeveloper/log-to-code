@@ -15,6 +15,7 @@ public class PaymentController {
 
     private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
+
     // ← Add this line here
     private static final String COMMIT_SHA = System.getenv("COMMIT_SHA") != null ? System.getenv("COMMIT_SHA") : "unknown";
 
