@@ -23,7 +23,7 @@ public class PaymentController {
     public String makePayment(@PathVariable String orderId) {
         try {
             if (orderId.startsWith("x")) {
-                throw new RuntimeException("Payment service failed");
+                throw new RuntimeException("Payment service failed due to insufficient balance");
             }
             logger.info("Payment successful | {\"level\":\"INFO\",\"commit_sha\":\"{}\",\"order_id\":\"{}\",\"message\":\"Payment successful\"}",
                     COMMIT_SHA, orderId);
