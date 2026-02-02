@@ -19,7 +19,6 @@ public class PaymentController {
     private static final String COMMIT_SHA = System.getenv("COMMIT_SHA") != null ? System.getenv("COMMIT_SHA") : "unknown";
 
 
-
     @GetMapping("/pay/{orderId}")
     public String makePayment(@PathVariable String orderId) {
         try {
