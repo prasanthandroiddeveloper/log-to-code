@@ -19,6 +19,7 @@ public class PaymentController {
     private static final String COMMIT_SHA = System.getenv("COMMIT_SHA") != null ? System.getenv("COMMIT_SHA") : "unknown";
 
 
+
     @GetMapping("/pay/{orderId}")
     public String makePayment(@PathVariable String orderId) {
         try {
@@ -28,7 +29,7 @@ public class PaymentController {
             logger.info("Payment successful | {\"level\":\"INFO\",\"commit_sha\":\"{}\",\"order_id\":\"{}\",\"message\":\"Payment successful\"}",
                     COMMIT_SHA, orderId);
         } catch (Exception e) {
-            logger.error("Payment failed | {\"level\":\"ERROR\",\"commit_sha\":\"{}\",\"order_id\":\"{}\",\"message\":\"{}\"}",
+            logger.error("Payment failed due to insufficient balance | {\"level\":\"ERROR\",\"commit_sha\":\"{}\",\"order_id\":\"{}\",\"message\":\"{}\"}",
                     COMMIT_SHA, orderId, e.getMessage());
         }
         return "Payment attempted for order: " + orderId;
